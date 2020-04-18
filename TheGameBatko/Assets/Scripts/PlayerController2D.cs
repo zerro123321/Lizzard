@@ -18,11 +18,15 @@ public class PlayerController2D : MonoBehaviour
 
     private int extraJumps;
     public int extraJumpsValue;
+
+
+    private Animator payerAnim;
     // Start is called before the first frame update
     void Start()
     {
         extraJumps = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
+        payerAnim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -30,26 +34,35 @@ public class PlayerController2D : MonoBehaviour
     {
         if (isGrounded == true)
         {
+         
             extraJumps = extraJumpsValue;
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0)
         {
+            payerAnim.SetBool("IsJump", true);
             rb.velocity = Vector2.up * jumpForce;
             extraJumps--;
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
         {
+            payerAnim.SetBool("IsJump", true);
             rb.velocity = Vector2.up * jumpForce;
         }
+        //Debug.Log(rb.velocity.y);
     }
 
     private void FixedUpdate()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround) && rb.velocity.y <= 0;
+
+        if (isGrounded)
+        {
+            payerAnim.SetBool("IsJump", false);
+        }
 
         moveInput = Input.GetAxis("Horizontal");
-        Debug.Log(moveInput);
+        
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
 
 
@@ -61,6 +74,8 @@ public class PlayerController2D : MonoBehaviour
         {
             Flip();
         }
+
+        payerAnim.SetFloat("Speed", moveInput);
     }
 
     void Flip()
