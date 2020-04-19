@@ -778,7 +778,7 @@ GameObject:
   - component: {fileID: 772650568}
   - component: {fileID: 772650567}
   m_Layer: 0
-  m_Name: sandCenter
+  m_Name: Underground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -839,12 +839,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772650566}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.037, y: -7.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 912866372}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &802506430
 GameObject:
@@ -990,6 +990,8 @@ Transform:
   - {fileID: 1005903882}
   - {fileID: 1051727850}
   - {fileID: 802506431}
+  - {fileID: 772650568}
+  - {fileID: 1854413103}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2092,7 +2094,7 @@ GameObject:
   - component: {fileID: 1854413103}
   - component: {fileID: 1854413102}
   m_Layer: 0
-  m_Name: signExit
+  m_Name: ExitSign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2155,10 +2157,10 @@ Transform:
   m_GameObject: {fileID: 1854413101}
   m_LocalRotation: {x: -0, y: 0.30590126, z: -0, w: 0.95206326}
   m_LocalPosition: {x: 7.8407807, y: 3.34, z: 0}
-  m_LocalScale: {x: 1.4755, y: 1.4755, z: 1.4755}
+  m_LocalScale: {x: 1.4754999, y: 1.4755, z: 1.4754999}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 912866372}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 35.625, z: 0}
 --- !u!1 &1919418832
 GameObject:
