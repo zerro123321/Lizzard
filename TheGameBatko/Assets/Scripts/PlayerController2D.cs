@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController2D : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class PlayerController2D : MonoBehaviour
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask whatIsGround;
+    private int _score;
 
     private int extraJumps;
     public int extraJumpsValue;
@@ -24,6 +27,7 @@ public class PlayerController2D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _score = 0;
         extraJumps = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
         payerAnim = GetComponent<Animator>();
@@ -49,7 +53,7 @@ public class PlayerController2D : MonoBehaviour
             payerAnim.SetBool("IsJump", true);
             rb.velocity = Vector2.up * jumpForce;
         }
-        //Debug.Log(rb.velocity.y);
+
     }
 
     private void FixedUpdate()
@@ -78,6 +82,30 @@ public class PlayerController2D : MonoBehaviour
         payerAnim.SetFloat("Speed", moveInput);
     }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        switch (collision.collider.tag)
+        {
+            case "Coin":
+                GetCoin(collision.gameObject);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void GetCoin(GameObject gameObject)
+    {
+        _score++;
+        Debug.Log(gameObject.name);
+        GameObject.Destroy(gameObject);
+        var textComponent = GameObject.Find("Score").GetComponent<Text>();
+        textComponent.text = $"Score: {_score}";
+
+
+    }
+
     void Flip()
     {
         facingRight = !facingRight;
@@ -85,4 +113,8 @@ public class PlayerController2D : MonoBehaviour
         Scaler.x *= -1;
         transform.localScale = Scaler;
     }
+
+
+
+
 }
