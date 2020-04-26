@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController2D : MonoBehaviour
 {
+    private int count;
+    [SerializeField] private Text countText;
     public float speed;
     public float jumpForce;
     private float moveInput;
@@ -24,6 +26,8 @@ public class PlayerController2D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        count = 0;
+        countText.text = "Player Score: " + count.ToString();
         extraJumps = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
         payerAnim = GetComponent<Animator>();
@@ -85,4 +89,19 @@ public class PlayerController2D : MonoBehaviour
         Scaler.x *= -1;
         transform.localScale = Scaler;
     }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+
+            Destroy(this.gameObject);
+            Debug.Log("GAME OVER");
+        }
+        if (other.CompareTag("Coin"))
+        {
+            count = count + 1;
+            countText.text = "Player Score: " + count.ToString();
+        }
+    }
+
 }
