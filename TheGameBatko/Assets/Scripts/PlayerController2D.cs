@@ -4,7 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PlayerController2D : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject coin;
+    
     private int count;
+
     [SerializeField] private Text countText;
     public float speed;
     public float jumpForce;
@@ -26,6 +30,7 @@ public class PlayerController2D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CoinSpawn();
         count = 0;
         countText.text = "Player Score: " + count.ToString();
         extraJumps = extraJumpsValue;
@@ -91,6 +96,7 @@ public class PlayerController2D : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
+        CoinSpawn();
         if (other.CompareTag("Enemy"))
         {
 
@@ -102,6 +108,27 @@ public class PlayerController2D : MonoBehaviour
             count = count + 1;
             countText.text = "Player Score: " + count.ToString();
         }
+    }
+
+    void CoinSpawn()
+    { 
+        bool coinSpawn = false;
+        while (coinSpawn)
+        {
+            Vector3 coinPosition = new Vector3(Random.Range(-7f, -7f), Random.Range(4f, 4f), 0);
+            if((coinPosition - transform.position).magnitude < 3)
+            {
+                continue;
+            }
+            else
+            {
+                Instantiate(coin, coinPosition, Quaternion.identity);
+                coinSpawn = true;
+            }
+        }
+    
+
+
     }
 
 }
