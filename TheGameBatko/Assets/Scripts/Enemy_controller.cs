@@ -24,25 +24,26 @@ public class Enemy_controller : MonoBehaviour
         count = 0;
         countText.text = "Enemy Score: " + count.ToString();
      
-       
-
-       
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-
-        if(isGrounded == true)
+        if (target != null)
         {
-            rb.velocity = Vector2.up * jumpForce;
-        }
-        else
-        {
-            isGrounded = false;
             transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+
+            if (isGrounded == true)
+            {
+                rb.velocity = Vector2.up * jumpForce;
+            }
+            else
+            {
+                isGrounded = false;
+                transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+            }
         }
+       
 
     }
 

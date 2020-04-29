@@ -26,11 +26,15 @@ public class CameraFollow2D : MonoBehaviour
         Vector3 startPos = transform.position;
 
         //Player current position
-        Vector3 endPos = player.transform.position;
-        endPos.x += posOffset.x;
-        endPos.y += posOffset.y;
-        endPos.z = -10;
+        Vector3 endPos = startPos;
+        if (player != null)
+        {
+            endPos = player.transform.position;
+            endPos.x += posOffset.x;
+            endPos.y += posOffset.y;
+            endPos.z = -10;
 
+        }
         transform.position = Vector3.Lerp(startPos, endPos, timeOffset * Time.deltaTime);
     }
 }
