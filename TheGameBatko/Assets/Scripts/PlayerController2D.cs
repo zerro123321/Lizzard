@@ -6,7 +6,7 @@ public class PlayerController2D : MonoBehaviour
 {
     [SerializeField]
     private GameObject coin;
-    
+
     private int count;
 
     [SerializeField] private Text countText;
@@ -22,8 +22,9 @@ public class PlayerController2D : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
-    private int extraJumps;
+    private int jumpsLeft;
     public int extraJumpsValue;
+    public bool isBlocked;
 
 
     private Animator payerAnim;
@@ -32,7 +33,7 @@ public class PlayerController2D : MonoBehaviour
     {
         count = 0;
         countText.text = "Player Score: " + count.ToString();
-        extraJumps = extraJumpsValue;
+        jumpsLeft = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
         payerAnim = GetComponent<Animator>();
     }
@@ -40,50 +41,77 @@ public class PlayerController2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isGrounded == true)
+        if (isGrounded)
         {
-         
-            extraJumps = extraJumpsValue;
+            jumpsLeft = extraJumpsValue;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0)
-        {
-            payerAnim.SetBool("IsJump", true);
-            rb.velocity = Vector2.up * jumpForce;
-            extraJumps--;
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
-        {
-            payerAnim.SetBool("IsJump", true);
-            rb.velocity = Vector2.up * jumpForce;
-        }
+        //if (!isBlocked)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0)
+        //    {
+        //        payerAnim.SetBool("IsJump", true);
+        //        rb.velocity = Vector2.up * jumpForce;
+        //        extraJumps--;
+        //    }
+        //    else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
+        //    {
+        //        payerAnim.SetBool("IsJump", true);
+        //        rb.velocity = Vector2.up * jumpForce;
+        //    }
+        //}
         //Debug.Log(rb.velocity.y);
     }
+
+  
 
     private void FixedUpdate()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround) && rb.velocity.y <= 0;
 
         if (isGrounded)
-        {
-            payerAnim.SetBool("IsJump", false);
-        }
-
-        moveInput = Input.GetAxis("Horizontal");
+            jumpsLeft = extraJumpsValue;
         
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-
-
-        if (facingRight == false && moveInput > 0)
-        {
-            Flip();
-        }
-        else if (facingRight == true && moveInput < 0)
-        {
-            Flip();
-        }
-
         payerAnim.SetFloat("Speed", moveInput);
+        if (isGrounded)
+            payerAnim.SetBool("IsJump", false);
+
+        HandleFlip();
+        HandleMovement();
+
+    }
+
+
+    private void HandleMovement()
+    {
+        if (isBlocked)
+        {
+            moveInput = 0;
+            rb.velocity = new Vector2(0, 0);
+        }
+        else
+        {
+            moveInput = Input.GetAxis("Horizontal");
+            rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+
+                if (!isGrounded && jumpsLeft == 0)
+                {
+                    // can not jump
+                    return;
+                }
+               
+                if (!isGrounded && jumpsLeft > 0)
+                {
+                    jumpsLeft--;
+                }
+               
+                payerAnim.SetBool("IsJump", true);
+                rb.velocity = Vector2.up * jumpForce;
+            }
+        }
     }
 
     void Flip()
@@ -93,6 +121,18 @@ public class PlayerController2D : MonoBehaviour
         Scaler.x *= -1;
         transform.localScale = Scaler;
     }
+    private void HandleFlip()
+    {
+        if (facingRight == false && moveInput > 0)
+        {
+            Flip();
+        }
+        else if (facingRight == true && moveInput < 0)
+        {
+            Flip();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy"))

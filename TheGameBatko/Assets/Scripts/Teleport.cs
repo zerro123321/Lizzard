@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Teleport : MonoBehaviour
@@ -12,12 +14,11 @@ public class Teleport : MonoBehaviour
     //private Teleport LinkedObjectTeleport;
 
     public bool isTeleported;
-    private bool teleporting;
+    public int teleDelay = 1500;
 
     void Start()
     {
         isTeleported = false;
-        teleporting = false;
         ParentObject = gameObject.transform.parent;
         LinkedObject = ParentObject.GetComponentsInChildren<Transform>()
             .FirstOrDefault(t => t.name != gameObject.name && t.name != ParentObject.name && t.name.Contains("Teleport"));
@@ -45,7 +46,12 @@ public class Teleport : MonoBehaviour
             var teleportSpot = LinkedObject.GetComponentsInChildren<Transform>()
                 .FirstOrDefault(t => t.name.Contains("Spot"));
             PlayerTransform.position = teleportSpot.position;
-            //teleporting
+            var playerController = PlayerTransform.gameObject.GetComponent<PlayerController2D>();
+            playerController.isBlocked = true;
+            Task.Run(() => {
+                Thread.Sleep(teleDelay);
+                playerController.isBlocked = false;
+            });
         }
         isTeleported = false;
     }
